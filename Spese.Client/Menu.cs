@@ -25,7 +25,8 @@ namespace Spese.Client
                     "\nScegli 3 per visualizzare le spese approvate nel mese precedente" +
                     "\nScegli 4 per Visualizzare le spese di un utente" +
                     "\nScegli 5 per Visualizzare il totale speso in una determinata categoria" +
-                    "\nScegli 6 per Le spese registrate ordinate dalla piu recente alla meno recente" +
+                    "\nScegli 6 per Visualizzare le spese registrate ordinate dalla piu recente alla meno recente" +
+                    "\nScegli 7 per Visualizzare il totale speso per ogni categoria" +
                     "\nScegli C per pulire la console" +
                     "\nScegli Q per uscire");
 
@@ -52,6 +53,9 @@ namespace Spese.Client
                     case '6':
                         GetSpeseOrdinate();
                         break;
+                    case '7':
+                        GetTotaleSpesoByAllCategorie();
+                        break;
                     case 'C':
                         Console.Clear();
                         break;
@@ -66,6 +70,14 @@ namespace Spese.Client
             } while (scelta != 'Q');
         }
 
+        public static void GetTotaleSpesoByAllCategorie()
+        {
+            foreach (Categoria c in businessLayer.FetchAllCategorie())
+            {
+                businessLayer.FetchCategoriaById(c.Id);
+                Console.WriteLine("Il totale speso nella categoria " + c.Nome + " è: " + businessLayer.GetTotaleSpesoByCategoria(c.Id));
+            }
+        }
         public static void GetSpeseOrdinate()
         {
             List<Spesa> spese = businessLayer.FetchAllSpeseOrdinate();
@@ -117,7 +129,7 @@ namespace Spese.Client
             PrintAllSpese();
             do
             {
-                spesaId = GetNumberInt("l'id dell'utente ");
+                spesaId = GetNumberInt("l'id della spesa ");
             } while (businessLayer.FetchSpesaById(spesaId) == null);
 
             if (businessLayer.ApprovaSpesa(spesaId))
